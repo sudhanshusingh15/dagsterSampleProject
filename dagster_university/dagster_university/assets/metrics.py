@@ -14,6 +14,7 @@ from . import constants
   deps=["taxi_trips", "taxi_zones"]
 )
 def manhattan_stats():
+    """GeoJSON data from table aggregated from taxis and zones"""
     query = """
         select
             zones.zone,

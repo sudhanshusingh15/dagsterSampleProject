@@ -6,6 +6,7 @@ from dagster import asset
 
 @asset
 def taxi_trips_file():
+    """The raw taxi trips data fetched from NYCData in a parquet file"""
     month_to_fetch = "2023-03"
     try:
         raw_trips_response = requests.get(
@@ -22,6 +23,7 @@ def taxi_trips_file():
 
 @asset
 def taxi_zones_file():
+    """The raw taxi zones data fetched for NYCData in a csv file"""
     try:
         raw_taxi_zones_response = requests.get(
             "https://data.cityofnewyork.us/api/views/755u-8jsi/rows.csv?accessType=DOWNLOAD"
@@ -37,6 +39,7 @@ def taxi_zones_file():
 
 @asset(deps=["taxi_trips_file"])
 def taxi_trips():
+    """taxi_trips table generated from taxi_trips_file loaded in DuckDB"""
     sql_query = """
         create or replace table trips as (
             select
@@ -65,6 +68,7 @@ def taxi_trips():
 
 @asset(deps=["taxi_zones_file"])
 def taxi_zones():
+    """taxi_zones table generated from taxi_zones_file loaded in DuckDB """
     sql_query = """
         create or replace table zones as (
             select
